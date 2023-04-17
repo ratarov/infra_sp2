@@ -13,23 +13,25 @@
 
 ### Установка
 **Запуск проекта из контейнера Docker:**
-```
 Клонируйте репозиторий:
+```
 git clone https://github.com/ratarov/infra_sp2
 ```
-```
 Убедитесь, что у Вас установлен Docker версии не ниже 19.03.0
+```
 docker --version
 ```
-```
 Перейдите в директорию с файлом docker-compose.yaml и запустите сборку
+```
 cd infra_sp2/infra
 docker-compose up -d
+```
 Для пересборки контейнера используйте
+```
 docker-compose up -d --build
 ```
-```
 Создайте и примените миграции, создайте суперпользователя и соберите статику
+```
 docker-compose exec web python manage.py makemigrations reviews
 docker-compose exec web python manage.py migrate
 docker-compose exec web python manage.py createsuperuser
