@@ -1,4 +1,3 @@
-# Final HomeWork Sprint №10
 ## API for YaMDB
 ### Описание
 **Командный проект. API для сервиса отзывов YaMDB**
@@ -9,48 +8,49 @@
 ![image](https://img.shields.io/badge/django%20rest-ff1709?style=for-the-badge&logo=django&logoColor=white)
 ![image](https://img.shields.io/badge/VSCode-0078D4?style=for-the-badge&logo=visual%20studio%20code&logoColor=white)
 ![image](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)
+![image](https://img.shields.io/badge/Docker-2CA5E0?style=for-the-badge&logo=docker&logoColor=white)
+![image](https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white)
+
 ### Установка
-**Как запустить проект:**
+**Запуск проекта из контейнера Docker:**
 ```
-Клонировать репозиторий и перейти в него в командной строке:
-git clone https://github.com/DmitriyOpushnev/api_yamdb
-cd api_yamdb
-```
-```
-Cоздать и активировать виртуальное окружение:
-python -m venv venv (если вы пользователь MacOS python3 -m venv venv)
-source venv/bin/activate
+Клонируйте репозиторий:
+git clone https://github.com/ratarov/infra_sp2
 ```
 ```
-Установить зависимости из файла requirements.txt:
-python -m pip install --upgrade pip (если вы пользователь MacOS python3 -m pip install --upgrade pip)
-pip install -r requirements.txt (если вы пользователь MacOS python3 pip install -r requirements.txt)
+Убедитесь, что у Вас установлен Docker версии не ниже 19.03.0
+docker --version
 ```
 ```
-Выполнить миграции:
-python manage.py migrate (если вы пользователь MacOS python3 manage.py migrate)
+Перейдите в директорию с файлом docker-compose.yaml и запустите сборку
+cd infra_sp2/infra
+docker-compose up -d
+Для пересборки контейнера используйте
+docker-compose up -d --build
 ```
 ```
-Запустить проект:
-python manage.py runserver (если вы пользователь MacOS python3 manage.py runserver)
+Создайте и примените миграции, создайте суперпользователя и соберите статику
+docker-compose exec web python manage.py makemigrations reviews
+docker-compose exec web python manage.py migrate
+docker-compose exec web python manage.py createsuperuser
+docker-compose exec web python manage.py collectstatic --no-input
 ```
-**Импорт csv файлов:**
+**Импорт данных в базу данных:**
 ```
-python manage.py fill_db_from_csv
+docker-compose exec web python manage.py loaddata fixtures.json
+или
+docker-compose exec web python manage.py fill_db_from_csv
 ```
-
-**Базовые эндопоинты API:**
+**Шаблон наполнения файла .env**
 ```
-"auth": "http://127.0.0.1:8000/api/v1/auth/",
-"categories": "http://127.0.0.1:8000/api/v1/categories/",
-"genres": "http://127.0.0.1:8000/api/v1/genres/",
-"genres": "http://127.0.0.1:8000/api/v1/genres/",
-"titles": "http://127.0.0.1:8000/api/v1/titles/",
-"reviews": "http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/",
-"comments": "http://127.0.0.1:8000/api/v1/titles/{title_id}/reviews/{review_id}/comments/",
+DB_ENGINE=django.db.backends.postgresql
+DB_NAME=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=db
+DB_PORT=5432
 ```
-
-**Все эндопоинты API:**
+### Документация API:
 ```
 Все эндпоинты, а так же их параметры доступны по адресу: 
 http://127.0.0.1:8000/redoc/
